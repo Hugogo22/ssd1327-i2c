@@ -1,9 +1,33 @@
 [package]
-name = "ssd1327_i2c"
-version = "0.1.0"
+name = "ssd1327-i2c"
+version = "0.2.0"
+authors = ["Hugo Eynard <hugo.eynard@gmail.com>"]
 edition = "2021"
+description = "SSD1327 I2C Driver"
+repository = "https://github.com/Hugogo22/ssd1327-i2c"
+license = "MIT OR Apache-2.0"
+
+keywords = [
+    "i2c",
+    "ssd1327",
+    "no-std",
+    "graphics",
+]
+categories = [
+    "embedded",
+    "no-std",
+]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
 embedded-hal = "0.2.7"
+embedded-graphics-core = { version = "0.4.0", optional = true }
+
+[dev-dependencies]
+esp-println = { version = "0.7.0", features = ["esp32"] }
+esp-backtrace = { version = "0.9.0", features = ["esp32", "panic-handler", "exception-handler", "print-uart"] }
+
+[features]
+default = ["graphics"]
+graphics = ["dep:embedded-graphics-core"]
