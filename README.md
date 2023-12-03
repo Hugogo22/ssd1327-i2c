@@ -1,5 +1,8 @@
 # SSD1327 I2C Driver
 
+[![Crates.io](https://img.shields.io/crates/v/ssd1327-i2c.svg)](https://crates.io/crates/ssd1327-i2c)
+[![Docs.rs](https://img.shields.io/docsrs/ssd1327-i2c.svg)](https://docs.rs/ssd1327-i2c)
+
 `no_std` I2C Driver for SSD1327 Oled screens.
 
 The `graphics` feature implements the [embedded-graphics](https://crates.io/crates/embedded-graphics) `DrawTarget` trait for the SSD1327 Oled screen.

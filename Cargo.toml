@@ -1,6 +1,6 @@
 [package]
 name = "ssd1327-i2c"
-version = "0.2.0"
+version = "0.3.0"
 authors = ["Hugo Eynard <hugo.eynard@gmail.com>"]
 edition = "2021"
 description = "SSD1327 I2C Driver"
