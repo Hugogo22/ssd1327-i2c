@@ -53,7 +53,7 @@ let i2c = I2C::new(
 );
 
 // Create a new SSD1327I2C object with slave address 0x3C, width 127 and height 127
-let mut driver = ssd1327_i2c::SSD1327I2C::new(i2c);
+let mut driver = ssd1327_i2c::build_ssd1327_i2c!(i2c);
 
 driver.init();
 
