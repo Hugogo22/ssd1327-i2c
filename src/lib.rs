@@ -239,7 +239,14 @@ where
         self.send_bytes(&data[0..len])
     }
 
-    /// Write 8 bytes of data to the SSD1327
+    /// Get the buffer size
+    #[cfg(feature = "graphics")]
+    #[must_use]
+    pub const fn buffer_size() -> usize {
+        N
+    }
+
+    /// Write 16 bytes of data to the SSD1327
     #[cfg(feature = "graphics")]
     #[inline]
     fn send_buffer_data(&mut self, index: usize) -> Result<(), I2C::Error> {
@@ -253,9 +260,18 @@ where
             self.framebuffer[index + 5],
             self.framebuffer[index + 6],
             self.framebuffer[index + 7],
+            self.framebuffer[index + 8],
+            self.framebuffer[index + 9],
+            self.framebuffer[index + 10],
+            self.framebuffer[index + 11],
+            self.framebuffer[index + 12],
+            self.framebuffer[index + 13],
+            self.framebuffer[index + 14],
+            self.framebuffer[index + 15],
         ];
         self.send_bytes(&bytes)
     }
+
 
     /// Update the display with the current framebuffer
     #[cfg(feature = "graphics")]
@@ -275,7 +291,7 @@ where
         // Send buffer data
         let mut res: Result<(), I2C::Error> = Ok(());
         for y in 0..=(usize::from(self.height)) {
-            for x in (0..=(usize::from(self.halfwidth))).step_by(8) {
+            for x in (0..=(usize::from(self.halfwidth))).step_by(16) {
                 let start_index = x + y * (usize::from(self.halfwidth) + 1);
                 if let Err(e) = self.send_buffer_data(start_index) {
                     res = Err(e);
