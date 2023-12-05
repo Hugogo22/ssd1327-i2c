@@ -114,9 +114,19 @@ impl<I2C, #[cfg(feature = "graphics")] const N: usize> impl_ssd1327_i2c!()
 where
     I2C: I2CWrite,
 {
+    pub const BUFFER_SIZE: usize = N;
+
     /// Create a new SSD1327I2C object with custom slave adress, width and height
+    /// ## Panics
+    /// If the buffer is not the right size. Use the `buffer_size()` function or the 
+    /// `build_ssd1327_i2c!()` macro.
     #[must_use]
     pub fn with_addr_wh(i2c: I2C, slave_address: u8, width: u8, height: u8) -> Self {
+        #[cfg(feature = "graphics")]
+        assert!(
+            N == buffer_size(width, height), 
+            "Buffer is not the right size. Use the buffer_size() function."
+        );
         #[cfg(feature = "graphics")]
         let framebuffer = [0u8; N];
         let halfwidth = (width - 1) / 2; // Two pixels per byte
@@ -181,6 +191,8 @@ where
     }
 
     /// Write command to the SSD1327
+    /// ## Errors
+    /// Propagates I2C write errors.
     pub fn send_cmd(&mut self, cmd: Commands) -> Result<(), I2C::Error> {
         let (data, len) = match cmd {
             Commands::ColumnAddress { start, end } => ([CMD_CONTROL_BYTE, 0x15, start, end], 4),
@@ -221,6 +233,8 @@ where
     }
 
     /// Write 8 bytes of data to the SSD1327
+    /// ## Errors
+    /// Propagates I2C write errors.
     pub fn send_data(&mut self, data: &[u8]) -> Result<(), I2C::Error> {
         let (data, len) = (
             [
@@ -237,13 +251,6 @@ where
             9,
         );
         self.send_bytes(&data[0..len])
-    }
-
-    /// Get the buffer size
-    #[cfg(feature = "graphics")]
-    #[must_use]
-    pub const fn buffer_size() -> usize {
-        N
     }
 
     /// Write 16 bytes of data to the SSD1327
@@ -274,6 +281,8 @@ where
 
 
     /// Update the display with the current framebuffer
+    /// ## Errors
+    /// Propagates I2C write errors.
     #[cfg(feature = "graphics")]
     pub fn flush(&mut self) -> Result<(), I2C::Error> {
         // Reset display address pointers
